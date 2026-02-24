@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Adminbereich{% endblock %}
+{% block content %}
+<section class="grid two">
+    <article class="card">
+        <h2>Neuen Mitarbeiter anlegen</h2>
+        <form method="POST" action="{{ url_for('create_user') }}" class="stack">
+            <input name="name" placeholder="Name" required>
+            <input name="email" type="email" placeholder="E-Mail" required>
+            <input name="password" placeholder="Passwort (optional, wird sonst automatisch erstellt)">
+            <select name="role">
+                <option value="employee">Mitarbeiter</option>
+                <option value="admin">Admin</option>
+            </select>
+            <select name="employment_type">
+                <option value="fest">Fest</option>
+                <option value="minijob">Minijob</option>
+                <option value="kurzfristig">Kurzfristig</option>
+            </select>
+            <button type="submit">Nutzer erstellen</button>
+        </form>
+    </article>
+
+    <article class="card">
+        <h2>Aktionen</h2>
+        <p>Exportiere alle Zeitdaten als Excel-Datei.</p>
+        <a class="button" href="{{ url_for('export') }}">Excel Export</a>
+    </article>
+</section>
+
+<section class="card">
+    <h2>Mitarbeiter</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Rolle</th>
+                    <th>Anstellung</th>
+                    <th>Status</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.employment_type }}</td>
+                    <td>{{ 'Aktiv' if user.active else 'Inaktiv' }}</td>
+                    <td><a href="{{ url_for('toggle_user', user_id=user.id) }}">Status wechseln</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Letzte Audit Logs</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Zeitpunkt</th>
+                    <th>User ID</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+                    <td>{{ log.user_id }}</td>
+                    <td>{{ log.action }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

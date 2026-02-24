@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+    <div class="card auth-card">
+        {% if login_type == 'admin' %}
+            <h1>Admin Login</h1>
+            <p>Nur fuer Administratoren</p>
+            <form method="POST" action="{{ url_for('admin_login') }}" class="stack">
+        {% else %}
+            <h1>Mitarbeiter Login</h1>
+            <p>Zeiterfassung fuer den Arbeitsalltag</p>
+            <form method="POST" action="{{ url_for('employee_login') }}" class="stack">
+        {% endif %}
+                <input type="email" name="email" placeholder="E-Mail" required>
+                <input type="password" name="password" placeholder="Passwort" required>
+                <button type="submit">Einloggen</button>
+            </form>
+
+        <div class="split-links">
+            <a href="{{ url_for('employee_login') }}">Mitarbeiter Login</a>
+            <a href="{{ url_for('admin_login') }}">Admin Login</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

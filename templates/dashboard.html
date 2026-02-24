@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="grid two">
+    <article class="card">
+        <h2>Heute</h2>
+        {% if active_entry %}
+            <p>Status: <strong>Laufend seit {{ active_entry.start_time.strftime('%d.%m.%Y %H:%M') }}</strong></p>
+            <a class="button danger" href="{{ url_for('stop_work') }}">Stoppen</a>
+        {% else %}
+            <p>Status: <strong>Nicht gestartet</strong></p>
+            <a class="button" href="{{ url_for('start_work') }}">Starten</a>
+        {% endif %}
+    </article>
+
+    <article class="card">
+        <h2>Manueller Eintrag</h2>
+        <form method="POST" action="{{ url_for('manual_entry') }}" class="stack">
+            <select name="entry_type">
+                <option value="work">Arbeit</option>
+                <option value="vacation">Urlaub</option>
+                <option value="sick">Krankheit</option>
+            </select>
+            <label>Start</label>
+            <input type="datetime-local" name="start_time" required>
+            <label>Ende</label>
+            <input type="datetime-local" name="end_time" required>
+            <button type="submit">Speichern</button>
+        </form>
+    </article>
+</section>
+
+<section class="card">
+    <h2>Letzte Eintraege</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Typ</th>
+                    <th>Start</th>
+                    <th>Ende</th>
+                    <th>Pause</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in entries %}
+                <tr>
+                    <td>{{ e.entry_type }}</td>
+                    <td>{{ e.start_time.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td>{% if e.end_time %}{{ e.end_time.strftime('%d.%m.%Y %H:%M') }}{% else %}-{% endif %}</td>
+                    <td>{{ e.break_minutes or 0 }} min</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
