@@ -20,6 +20,6 @@ services:
 
 databases:
   - name: zeiterfassung-db
-    plan: starter
+    plan: basic-256mb
     databaseName: zeiterfassung
     user: zeiterfassung
